@@ -6,8 +6,9 @@ import { fetchProfiles, deleteProfile } from "../../actions";
 
 class ProfileIndex extends Component {
   componentDidMount(){
-      //GET one admin profiles
+      //GET admin profiles
     this.props.fetchProfiles();
+    console.log("step 2 - this.props.fetchProfiles()", this.props.fetchProfiles());
   /** 
     const mock_admin_profiles = [
       {'id':'admin001',
@@ -72,7 +73,7 @@ class ProfileIndex extends Component {
   }
 
   render() {
-    console.log(this.props.profiles);
+    console.log("step 3 - render all profiles", this.props.profiles);
     //const { profile } = this.props;
 
     return (
@@ -92,6 +93,7 @@ class ProfileIndex extends Component {
 }
 
 function mapStateToProps(state) {
+  console.log("step 1 - mapStateToProps profiles", state);
   return { profiles: state.profiles };
 }
 

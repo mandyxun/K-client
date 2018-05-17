@@ -3,6 +3,7 @@ import axios from "axios";
 export const FETCH_PROFILES = "fetch_profiles";
 export const FETCH_PROFILE = "fetch_profile";
 export const CREATE_PROFILE = "create_profile";
+export const UPDATE_PROFILE = "update_profile";
 export const DELETE_PROFILE = "delete_profile";
 
 const Profile_URL = 'http://' + window.location.hostname + ':3000/admin';
@@ -25,6 +26,18 @@ export function createProfile(values, callback) {
 
   return {
     type: CREATE_PROFILE,
+    payload: request
+  };
+}
+
+//PUT one admin profile *TODO*
+export function updateProfile(values, callback) {
+  const request = axios
+    .post(`${Profile_URL}/admin-profiles`, values)
+    .then(() => callback());
+
+  return {
+    type: UPDATE_PROFILE,
     payload: request
   };
 }

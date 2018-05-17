@@ -18,7 +18,7 @@ ReactDOM.render(
       <div>
         <Switch>
           top menu
-          <Route path="/my-profile/edit" component={ProfileEdit} />
+          <Route path="/my-profile/:id/edit" component={ProfileEdit} />
           <Route path="/my-profile/:id" component={ProfileDetail} />
           <Route path="/my-profile/" component={ProfileList} />
         </Switch>

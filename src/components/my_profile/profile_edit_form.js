@@ -2,9 +2,31 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { createProfile } from "../../actions";
+import { createProfile, fetchProfile } from "../../actions";
 
 class ProfileEditForm extends Component {
+  componentWillMount() {
+    if (!this.props.initialValues) {
+      const { id } = this.props.match.params;
+      this.props.fetchProfile(id);
+      console.log("step 2 - if initialValues doesnot exist, fetchProfile");
+
+      };
+    } 
+  
+  handleInitialize(){
+    const initData = {
+      "email": this.props.initialValues.email,
+      "name": this.props.initialValues.name,
+      "eName": this.props.initialValues.eName,
+      "gender": this.props.initialValues.gender,
+      "timezone": this.props.initialValues.timezone
+    };
+    console.log("step 4 - initial data", initData);
+    this.props.initialize(initData);
+  }
+  
+
   renderField(field) {
     const { meta: { touched, error } } = field;
     const className = `form-group row ${touched && error ? "has-danger" : ""}`;
@@ -96,17 +118,24 @@ class ProfileEditForm extends Component {
 
   onSubmit(values) {
     //this === component 
-    console.log(values);
+    console.log("onsubmit edit form value", values);
     this.props.createProfile(values, () => {
-      this.props.history.push("/my-profile/");
+      this.props.history.push(`/my-profile/`);
     });
   }
 
   render() {
     const { handleSubmit } = this.props;
-
+    if (!this.props.initialValues) {
+      return <div>loading...</div>;
+    }
+    console.log("step 3 - render edit form this.props", this.props);
+    console.log("step 3 - render edit form this.props.initialValues", this.props.initialValues);
+    this.handleInitialize();
+    
     return (
       <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+        
         <Field
           label="邮箱"
           name="email"
@@ -156,7 +185,7 @@ class ProfileEditForm extends Component {
   
 // validate : (value, allValues, props) => error [optional] #
 function validate(values) {
-  console.log(values); //-> { title: 'asdf', categories: 'asdf', content: 'asdf' }
+  console.log("validate values", values); //-> { title: 'asdf', categories: 'asdf', content: 'asdf' }
   const errors = {};
 
   // Validate the inputs from 'values'
@@ -182,9 +211,14 @@ function validate(values) {
   return errors;
 }
 
+function mapStateToProps({ profiles }, ownProps) {
+  console.log("step 1 - edit page - mapStateToProps profiles", profiles);
+  return { initialValues: profiles[ownProps.match.params.id] };
+}
+
 export default reduxForm({
   validate,
   form:'ProfileEditForm'
 })(
-  connect(null, {createProfile})(ProfileEditForm)
+  connect(mapStateToProps, {createProfile, fetchProfile})(ProfileEditForm)
 );

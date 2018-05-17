@@ -5,8 +5,11 @@ import { fetchProfile } from "../../actions";
 
 class ProfileDetail extends Component {
   componentDidMount() {
-    const { id } = this.props.match.params;
-    this.props.fetchProfile(id);
+    if (!this.props.profile) {
+      const { id } = this.props.match.params;
+      this.props.fetchProfile(id);
+      console.log("step 2 - detail page - if no profile, fetchProfile(id)");
+    }
   }
 
   render() {
@@ -15,7 +18,7 @@ class ProfileDetail extends Component {
     if (!profile) {
       return <div>loading...</div>;
     }
-
+    console.log("step 3 - detail page - profile detail", this.props.profile);
     return (
       <div>
         <Link to="/my-profile/">所有admins</Link>
@@ -47,7 +50,7 @@ class ProfileDetail extends Component {
           </dd>
         </dl>
         
-        <Link className="btn btn-primary" to="/my-profile/edit">
+        <Link className="btn btn-primary" to={`/my-profile/${profile.id}/edit`}>
             更新个人资料
         </Link>
       </div>
@@ -56,7 +59,11 @@ class ProfileDetail extends Component {
 }
 //this.props ===ownProps
 function mapStateToProps({ profiles }, ownProps) {
-  return { profile: profiles[ownProps.match.params.id] };
+  console.log("step 1 - detail page - mapStateToProps profiles", profiles);
+  return { profile: profiles[ownProps.match.params.id] 
+
+  };
 }
+
 
 export default connect(mapStateToProps, { fetchProfile })(ProfileDetail);
